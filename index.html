@@ -27,20 +27,48 @@
 
     <!-- FORM PASIEN -->
     <div id="pasien" class="form">
-        <input id="tanggal1" placeholder="Hari, Tanggal">
+        <!-- PILIH HARI -->
+        <select id="hari1">
+            <option value="">Pilih Hari</option>
+            <option value="Senin">Senin</option>
+            <option value="Selasa">Selasa</option>
+            <option value="Rabu">Rabu</option>
+            <option value="Kamis">Kamis</option>
+            <option value="Jumat">Jumat</option>
+            <option value="Sabtu">Sabtu</option>
+            <option value="Minggu">Minggu</option>
+        </select>
+        
+        <input id="tanggal1" type="number" min="1" max="31" placeholder="Tanggal (1-31)">
+        <select id="bulan1">
+            <option value="">Pilih Bulan</option>
+            <option value="Januari">Januari</option>
+            <option value="Februari">Februari</option>
+            <option value="Maret">Maret</option>
+            <option value="April">April</option>
+            <option value="Mei">Mei</option>
+            <option value="Juni">Juni</option>
+            <option value="Juli">Juli</option>
+            <option value="Agustus">Agustus</option>
+            <option value="September">September</option>
+            <option value="Oktober">Oktober</option>
+            <option value="November">November</option>
+            <option value="Desember">Desember</option>
+        </select>
+        <input id="tahun1" type="number" min="2024" max="2030" placeholder="Tahun (2024-2030)">
+
         <input id="nama1" placeholder="Nama Pasien">
-        <input id="usia1" placeholder="Usia">
+        <input id="usia1" type="number" min="0" max="120" placeholder="Usia">
         <input id="kondisi" placeholder="Kondisi (duduk/berbaring)">
         <input id="penyakit" placeholder="Penyakit">
         <input id="tbc" placeholder="TBC (Ya/Tidak)">
-        <textarea id="alamatJemput1" placeholder="Alamat Penjemputan"></textarea>
 
         <input id="sherlock" placeholder="Sherlock Rumah" readonly>
         <button type="button" class="btn-lokasi" onclick="bukaMap('sherlock')">📍 Pilih di Map</button>
 
         <textarea id="alamatAntar1" placeholder="Alamat Antar"></textarea>
-        <input id="jam1" placeholder="Jam Penjemputan">
-        <input id="pendamping" placeholder="Jumlah Pendamping">
+        <input id="jam1" type="time">
+        <input id="pendamping" type="number" min="0" max="10" placeholder="Jumlah Pendamping">
         <input id="kontak1" placeholder="Kontak HP/WA">
 
         <button onclick="kirim('pasien')">Kirim ke WhatsApp</button>
@@ -48,16 +76,44 @@
 
     <!-- FORM JENAZAH -->
     <div id="jenazah" class="form">
-        <input id="tanggal2" placeholder="Hari, Tanggal">
+        <!-- PILIH HARI -->
+        <select id="hari2">
+            <option value="">Pilih Hari</option>
+            <option value="Senin">Senin</option>
+            <option value="Selasa">Selasa</option>
+            <option value="Rabu">Rabu</option>
+            <option value="Kamis">Kamis</option>
+            <option value="Jumat">Jumat</option>
+            <option value="Sabtu">Sabtu</option>
+            <option value="Minggu">Minggu</option>
+        </select>
+        
+        <input id="tanggal2" type="number" min="1" max="31" placeholder="Tanggal (1-31)">
+        <select id="bulan2">
+            <option value="">Pilih Bulan</option>
+            <option value="Januari">Januari</option>
+            <option value="Februari">Februari</option>
+            <option value="Maret">Maret</option>
+            <option value="April">April</option>
+            <option value="Mei">Mei</option>
+            <option value="Juni">Juni</option>
+            <option value="Juli">Juli</option>
+            <option value="Agustus">Agustus</option>
+            <option value="September">September</option>
+            <option value="Oktober">Oktober</option>
+            <option value="November">November</option>
+            <option value="Desember">Desember</option>
+        </select>
+        <input id="tahun2" type="number" min="2024" max="2030" placeholder="Tahun (2024-2030)">
+
         <input id="nama2" placeholder="Nama">
-        <input id="usia2" placeholder="Usia">
-        <textarea id="alamatJemput2" placeholder="Alamat Penjemputan"></textarea>
+        <input id="usia2" type="number" min="0" max="120" placeholder="Usia">
 
         <input id="maps" placeholder="Lokasi Map" readonly>
         <button type="button" class="btn-lokasi" onclick="bukaMap('maps')">📍 Pilih di Map</button>
 
         <textarea id="alamatAntar2" placeholder="Alamat Antar"></textarea>
-        <input id="jam2" placeholder="Jam Penjemputan">
+        <input id="jam2" type="time">
         <input id="kontak2" placeholder="Kontak HP/WA">
         <input id="sakit" placeholder="Sakit sebelum meninggal">
         <input id="peti" placeholder="Peti/Tidak">

@@ -107,7 +107,7 @@ function ambilAlamat(lat, lon, inputId){
 ========================= */
 function simpanData(){
     let data = {};
-    document.querySelectorAll("input, textarea").forEach(el=>{
+    document.querySelectorAll("input, textarea, select").forEach(el=>{
         if(el.id){
             data[el.id] = el.value;
         }
@@ -132,6 +132,7 @@ function loadData(){
 
 /* AUTO SAVE */
 document.addEventListener("input", simpanData);
+document.addEventListener("change", simpanData);
 
 /* =========================
    LOAD AWAL (TANPA MAP)
@@ -141,24 +142,23 @@ window.onload = function(){
 };
 
 /* =========================
-   KIRIM WA
+   KIRIM WA (UPDATED)
 ========================= */
 function kirim(jenis){
     let nomor = "6285713322154";
     let pesan = "";
 
     if(jenis==="pasien"){
+        let tanggalLengkap = `${hari1.value || ''} ${tanggal1.value || ''} ${bulan1.value || ''} ${tahun1.value || ''}`.trim();
+        
         pesan = `FORM PERMOHONAN AMBULANMU (PASIEN)
 
-Hari/Tanggal: ${tanggal1.value}
+Hari/Tanggal: ${tanggalLengkap}
 Nama Pasien: ${nama1.value}
 Usia: ${usia1.value}
 Kondisi: ${kondisi.value}
 Penyakit: ${penyakit.value}
 TBC: ${tbc.value}
-
-Alamat Penjemputan:
-${alamatJemput1.value}
 
 Sherlock Rumah:
 ${sherlock.value}
@@ -172,14 +172,13 @@ Kontak: ${kontak1.value}
 `;
 
     } else {
+        let tanggalLengkap = `${hari2.value || ''} ${tanggal2.value || ''} ${bulan2.value || ''} ${tahun2.value || ''}`.trim();
+        
         pesan = `FORM PERMOHONAN AMBULANMU (JENAZAH)
 
-Hari/Tanggal: ${tanggal2.value}
+Hari/Tanggal: ${tanggalLengkap}
 Nama: ${nama2.value}
 Usia: ${usia2.value}
-
-Alamat Penjemputan:
-${alamatJemput2.value}
 
 Lokasi Map:
 ${maps.value}
