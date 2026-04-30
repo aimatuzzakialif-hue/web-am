@@ -1,7 +1,6 @@
-/* SCRIPT AMBULANMU SEYEGAN - CLEAN VERSION */
+/* SCRIPT AMBULANMU SEYEGAN - WITH SEARCH & GPS MAP */
 let nomorWA = "6285713322154";
 
-// BULAN MAX HARI
 const BULAN_MAX_HARI = {
     'Januari': 31, 'Februari': 28, 'Maret': 31, 'April': 30,
     'Mei': 31, 'Juni': 30, 'Juli': 31, 'Agustus': 31,
@@ -31,155 +30,251 @@ function initBulan() {
 function updateTanggalMax(bulanId, tanggalId) {
     let bulanSelect = document.getElementById(bulanId);
     let tanggalInput = document.getElementById(tanggalId);
-    
-    bulanSelect.onchange = function() {
+
+    bulanSelect.onchange = function () {
         let bulan = this.value;
         let maxHari = bulan ? BULAN_MAX_HARI[bulan] : 31;
         tanggalInput.max = maxHari;
-        if(parseInt(tanggalInput.value) > maxHari) tanggalInput.value = '';
+        if (parseInt(tanggalInput.value) > maxHari) tanggalInput.value = '';
     };
-    
-    tanggalInput.oninput = function() {
+
+    tanggalInput.oninput = function () {
         let val = parseInt(this.value);
         let maxHari = bulanSelect.value ? BULAN_MAX_HARI[bulanSelect.value] : 31;
-        if(val > maxHari) this.value = maxHari;
+        if (val > maxHari) this.value = maxHari;
     };
 }
 
 /* =========================
-   MAP LEAFLET UNTUK MAPS (JENAZAH)
+   MAP LEAFLET - REUSABLE
+   targetField: 'sherlock' atau 'maps'
 ========================= */
-let mapInstance, markerInstance;
-function bukaLeafletMap() {
+let mapInstance, markerInstance, currentTargetField;
+
+function bukaMap(targetField) {
+    currentTargetField = targetField;
     document.getElementById("mapModal").style.display = "block";
-    
+
     setTimeout(() => {
-        // RESET MAP
         const mapContainer = document.getElementById('map');
         mapContainer.innerHTML = '';
-        
-        // INIT MAP
-        mapInstance = L.map('map').setView([-7.7, 110.35], 13);
-        
+
+        mapInstance = L.map('map').setView([-7.714, 110.341], 13);
+
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap'
         }).addTo(mapInstance);
-        
-        // CUSTOM MARKER
+
         const customIcon = L.divIcon({
             className: 'custom-marker',
-            html: '<div style="font-size:24px; color:#ff6b35; font-weight:bold;">📍</div>',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            html: '<div style="font-size:28px;">📍</div>',
+            iconSize: [32, 40],
+            iconAnchor: [16, 40]
         });
-        
-        // CLICK EVENT
-        mapInstance.on('click', function(e) {
-            // REMOVE OLD MARKER
-            if(markerInstance) mapInstance.removeLayer(markerInstance);
-            
-            // NEW MARKER
-            markerInstance = L.marker(e.latlng, {icon: customIcon}).addTo(mapInstance);
+
+        /* CLICK EVENT - PILIH LOKASI */
+        mapInstance.on('click', function (e) {
+            if (markerInstance) mapInstance.removeLayer(markerInstance);
+
+            markerInstance = L.marker(e.latlng, { icon: customIcon }).addTo(mapInstance);
             mapInstance.setView(e.latlng, 17);
-            
-            // SHOW COORDS
+
             const lat = e.latlng.lat.toFixed(6);
             const lng = e.latlng.lng.toFixed(6);
-            
+
             markerInstance.bindPopup(`
                 <div style="text-align:center; min-width:200px;">
                     <b>LOKASI TERPILIH</b><br><br>
                     Lat: <strong>${lat}</strong><br>
                     Lng: <strong>${lng}</strong><br><br>
-                    <button onclick="simpanLokasiJenazah(${lat}, ${lng})" 
+                    <button onclick="simpanLokasi(${lat}, ${lng})"
                             style="width:100%; padding:12px; background:#ff6b35; color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer;">
                         SIMPAN LOKASI
                     </button>
                 </div>
             `).openPopup();
         });
-        
-        // AUTO GPS
-        if(navigator.geolocation) {
+
+        /* AUTO GPS SAAT MAP DIBUKA */
+        if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 pos => mapInstance.setView([pos.coords.latitude, pos.coords.longitude], 16),
                 () => {}
             );
         }
-        
+
         mapInstance.invalidateSize();
-        
+
     }, 200);
 }
 
-function simpanLokasiJenazah(lat, lng) {
-    // GEOCODE REVERSE
+/* =========================
+   SIMPAN LOKASI DARI MAP
+========================= */
+function simpanLokasi(lat, lng) {
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=id`, {
         headers: { 'User-Agent': 'AmbulanMu-Seyegan/4.0' }
     })
     .then(res => res.json())
     .then(data => {
         let alamat = data.display_name || `Koordinat: ${lat}, ${lng}`;
-        let mapsValue = `${alamat} | https://maps.google.com/?q=${lat},${lng}`;
-        
-        document.getElementById('maps').value = mapsValue;
-        document.getElementById('maps').style.backgroundColor = '#d4edda';
-        setTimeout(() => document.getElementById('maps').style.backgroundColor = '', 1500);
-        
+        let value = `${alamat} | https://maps.google.com/?q=${lat},${lng}`;
+
+        let el = document.getElementById(currentTargetField);
+        el.value = value;
+        el.style.backgroundColor = '#d4edda';
+        setTimeout(() => el.style.backgroundColor = '', 1500);
+
         simpanData();
         tutupMap();
         alert('Lokasi berhasil disimpan!');
     })
     .catch(() => {
-        let mapsValue = `Lat:${lat}, Lng:${lng} | https://maps.google.com/?q=${lat},${lng}`;
-        document.getElementById('maps').value = mapsValue;
+        let value = `Lat:${lat}, Lng:${lng} | https://maps.google.com/?q=${lat},${lng}`;
+        document.getElementById(currentTargetField).value = value;
         simpanData();
         tutupMap();
     });
 }
 
 /* =========================
-   SHERLOCK AUTO GPS
+   CARI ALAMAT DI MAP
 ========================= */
-async function isiSherlockOtomatis() {
-    try {
-        const position = await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject, {
-                enableHighAccuracy: true,
-                timeout: 8000
-            });
-        });
-        
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        
-        const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=id`,
-            { headers: { 'User-Agent': 'AmbulanMu-Seyegan/4.0' } }
-        );
-        
-        const data = await response.json();
-        let alamat = data.display_name || `Lat:${lat.toFixed(6)}, Lng:${lng.toFixed(6)}`;
-        
-        let sherlockValue = `${alamat} | https://maps.google.com/?q=${lat.toFixed(6)},${lng.toFixed(6)}`;
-        document.getElementById('sherlock').value = sherlockValue;
-        document.getElementById('sherlock').style.backgroundColor = '#d4edda';
-        
-        setTimeout(() => document.getElementById('sherlock').style.backgroundColor = '', 1500);
-        simpanData();
-        
-    } catch(error) {
-        alert('GPS tidak tersedia. Gunakan tombol Google Maps manual.');
-        bukaGoogleMapsManual();
-    }
-}
+function cariAlamat() {
+    let query = document.getElementById('mapSearchInput').value.trim();
+    if (!query) return;
 
-function bukaGoogleMapsManual() {
-    window.open('https://www.google.com/maps', '_blank');
+    let btn = document.getElementById('mapSearchBtn');
+    btn.textContent = '⏳';
+    btn.disabled = true;
+
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&accept-language=id&countrycodes=id`, {
+        headers: { 'User-Agent': 'AmbulanMu-Seyegan/4.0' }
+    })
+    .then(res => res.json())
+    .then(results => {
+        btn.textContent = 'Cari';
+        btn.disabled = false;
+
+        if (!results || results.length === 0) {
+            alert('Alamat tidak ditemukan. Coba kata kunci lain.');
+            return;
+        }
+
+        /* TAMPILKAN DROPDOWN HASIL */
+        let dropdown = document.getElementById('mapSearchResults');
+        dropdown.innerHTML = '';
+        dropdown.style.display = 'block';
+
+        results.forEach(item => {
+            let div = document.createElement('div');
+            div.textContent = item.display_name;
+            div.style.cssText = 'padding:10px 14px; cursor:pointer; border-bottom:1px solid #eee; font-size:13px; line-height:1.4;';
+            div.onmouseover = () => div.style.background = '#fff3eb';
+            div.onmouseout = () => div.style.background = '';
+            div.onclick = () => {
+                let lat = parseFloat(item.lat);
+                let lng = parseFloat(item.lon);
+
+                mapInstance.setView([lat, lng], 17);
+
+                let customIcon = L.divIcon({
+                    className: 'custom-marker',
+                    html: '<div style="font-size:28px;">📍</div>',
+                    iconSize: [32, 40],
+                    iconAnchor: [16, 40]
+                });
+
+                if (markerInstance) mapInstance.removeLayer(markerInstance);
+                markerInstance = L.marker([lat, lng], { icon: customIcon }).addTo(mapInstance);
+
+                let latF = lat.toFixed(6);
+                let lngF = lng.toFixed(6);
+
+                markerInstance.bindPopup(`
+                    <div style="text-align:center; min-width:200px;">
+                        <b>LOKASI DITEMUKAN</b><br><br>
+                        <small>${item.display_name.substring(0, 80)}...</small><br><br>
+                        Lat: <strong>${latF}</strong><br>
+                        Lng: <strong>${lngF}</strong><br><br>
+                        <button onclick="simpanLokasi(${latF}, ${lngF})"
+                                style="width:100%; padding:12px; background:#ff6b35; color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer;">
+                            SIMPAN LOKASI INI
+                        </button>
+                    </div>
+                `).openPopup();
+
+                dropdown.style.display = 'none';
+            };
+            dropdown.appendChild(div);
+        });
+    })
+    .catch(() => {
+        btn.textContent = 'Cari';
+        btn.disabled = false;
+        alert('Gagal mencari. Cek koneksi internet.');
+    });
 }
 
 /* =========================
-   MAIN FUNCTIONS
+   GPS TOMBOL DI MAP
+========================= */
+function ambilGPSdiMap() {
+    if (!navigator.geolocation) {
+        alert('GPS tidak didukung di browser ini.');
+        return;
+    }
+
+    let btn = document.getElementById('mapGPSBtn');
+    btn.textContent = '⏳ GPS...';
+    btn.disabled = true;
+
+    navigator.geolocation.getCurrentPosition(
+        pos => {
+            btn.textContent = '📡 Lokasi Saya';
+            btn.disabled = false;
+
+            let lat = pos.coords.latitude;
+            let lng = pos.coords.longitude;
+
+            mapInstance.setView([lat, lng], 18);
+
+            let customIcon = L.divIcon({
+                className: 'custom-marker',
+                html: '<div style="font-size:28px;">📍</div>',
+                iconSize: [32, 40],
+                iconAnchor: [16, 40]
+            });
+
+            if (markerInstance) mapInstance.removeLayer(markerInstance);
+            markerInstance = L.marker([lat, lng], { icon: customIcon }).addTo(mapInstance);
+
+            let latF = lat.toFixed(6);
+            let lngF = lng.toFixed(6);
+
+            markerInstance.bindPopup(`
+                <div style="text-align:center; min-width:200px;">
+                    <b>LOKASI ANDA SEKARANG</b><br><br>
+                    Lat: <strong>${latF}</strong><br>
+                    Lng: <strong>${lngF}</strong><br><br>
+                    <button onclick="simpanLokasi(${latF}, ${lngF})"
+                            style="width:100%; padding:12px; background:#ff6b35; color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer;">
+                        SIMPAN LOKASI INI
+                    </button>
+                </div>
+            `).openPopup();
+        },
+        err => {
+            btn.textContent = '📡 Lokasi Saya';
+            btn.disabled = false;
+            alert('GPS gagal: ' + (err.message || 'Izin ditolak'));
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+    );
+}
+
+/* =========================
+   FORM & MODAL FUNCTIONS
 ========================= */
 function pilihForm(jenis) {
     document.getElementById("pasien").classList.remove("aktif");
@@ -189,45 +284,44 @@ function pilihForm(jenis) {
 
 function tutupMap() {
     document.getElementById("mapModal").style.display = "none";
+    let dropdown = document.getElementById('mapSearchResults');
+    if (dropdown) dropdown.style.display = 'none';
+    if (mapInstance) {
+        mapInstance.remove();
+        mapInstance = null;
+        markerInstance = null;
+    }
 }
 
 function validasiForm(jenis) {
-    if(!document.querySelector('input[name="layanan"]:checked')) {
+    if (!document.querySelector('input[name="layanan"]:checked')) {
         alert("Pilih jenis layanan terlebih dahulu");
         return false;
     }
-    
-    if(jenis === "pasien") {
-        if(!sherlock.value?.trim()) {
-            alert("Sherlock Rumah wajib diisi");
-            return false;
-        }
-        if(!nama1.value.trim()) { nama1.focus(); alert("Nama Pasien wajib"); return false; }
-        if(!kontak1.value.trim()) { kontak1.focus(); alert("Kontak wajib"); return false; }
+
+    if (jenis === "pasien") {
+        if (!sherlock.value?.trim()) { alert("Sherlock Rumah wajib diisi"); return false; }
+        if (!nama1.value.trim()) { nama1.focus(); alert("Nama Pasien wajib"); return false; }
+        if (!kontak1.value.trim()) { kontak1.focus(); alert("Kontak wajib"); return false; }
     } else {
-        if(!maps.value?.trim()) {
-            alert("Lokasi Map wajib diisi");
-            return false;
-        }
-        if(!nama2.value.trim()) { nama2.focus(); alert("Nama wajib"); return false; }
-        if(!kontak2.value.trim()) { kontak2.focus(); alert("Kontak wajib"); return false; }
+        if (!maps.value?.trim()) { alert("Lokasi Map wajib diisi"); return false; }
+        if (!nama2.value.trim()) { nama2.focus(); alert("Nama wajib"); return false; }
+        if (!kontak2.value.trim()) { kontak2.focus(); alert("Kontak wajib"); return false; }
     }
     return true;
 }
 
 function kirim(jenis) {
-    if(!validasiForm(jenis)) return;
-    
+    if (!validasiForm(jenis)) return;
+
     let isPasien = jenis === 'pasien';
     let hariEl = document.getElementById(isPasien ? 'hari1' : 'hari2');
     let tglEl = document.getElementById(isPasien ? 'tanggal1' : 'tanggal2');
     let bulanEl = document.getElementById(isPasien ? 'bulan1' : 'bulan2');
     let tahunEl = document.getElementById(isPasien ? 'tahun1' : 'tahun2');
-    
-    let tanggalLengkap = [
-        hariEl.value, tglEl.value, bulanEl.value, tahunEl.value
-    ].filter(Boolean).join(' ');
-    
+
+    let tanggalLengkap = [hariEl.value, tglEl.value, bulanEl.value, tahunEl.value].filter(Boolean).join(' ');
+
     let pesan = isPasien ?
         `*PERMOHONAN AMBULANS - PASIEN*
 
@@ -267,7 +361,7 @@ Peti: ${peti.value || '-'}`;
 function simpanData() {
     let data = {};
     document.querySelectorAll("input, textarea, select").forEach(el => {
-        if(el.id) data[el.id] = el.value;
+        if (el.id) data[el.id] = el.value;
     });
     localStorage.setItem("ambulansData", JSON.stringify(data));
 }
@@ -275,17 +369,17 @@ function simpanData() {
 function loadData() {
     try {
         let data = JSON.parse(localStorage.getItem("ambulansData") || '{}');
-        for(let id in data) {
+        for (let id in data) {
             let el = document.getElementById(id);
-            if(el) el.value = data[id];
+            if (el) el.value = data[id];
         }
-    } catch(e) {}
+    } catch (e) {}
 }
 
 document.addEventListener("input", simpanData);
 document.addEventListener("change", simpanData);
 
-window.onload = function() {
+window.onload = function () {
     initBulan();
     updateTanggalMax('bulan1', 'tanggal1');
     updateTanggalMax('bulan2', 'tanggal2');

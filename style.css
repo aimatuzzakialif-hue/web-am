@@ -441,3 +441,132 @@ button:hover {
         max-width: 100%;
     }
 }
+
+/* ============================================
+   TAMBAHAN CSS - MAP MODAL SEARCH & GPS
+   Tambahkan ini di bagian BAWAH file style.css
+============================================ */
+
+/* MODAL LAYOUT */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 0;
+    position: relative;
+}
+
+/* SEARCH BAR */
+.map-search-bar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.map-search-bar input {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 16px;
+    border-radius: 25px;
+    border: 2px solid rgba(255, 139, 66, 0.4);
+    font-size: 15px;
+    background: white;
+    margin: 0;
+    box-shadow: none;
+}
+
+.map-search-bar input:focus {
+    outline: none;
+    border-color: #ff6b35;
+    transform: none;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+}
+
+.map-search-bar button {
+    width: auto;
+    padding: 12px 20px;
+    margin: 0;
+    font-size: 14px;
+    border-radius: 25px;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+}
+
+#mapSearchBtn {
+    background: linear-gradient(145deg, #ff6b35, #f7931e);
+    color: white;
+    min-width: 80px;
+}
+
+#mapGPSBtn {
+    background: linear-gradient(145deg, #fff8f0, #ffe8d6);
+    color: #ff6b35;
+    border: 2px solid #ff8c42;
+    font-weight: 700;
+}
+
+#mapGPSBtn:hover {
+    background: linear-gradient(145deg, #ff6b35, #f7931e);
+    color: white;
+    border-color: #ff6b35;
+}
+
+.map-close-btn {
+    background: #f0f0f0;
+    color: #555;
+    border: none;
+    min-width: auto;
+    font-size: 14px;
+    padding: 12px 16px;
+}
+
+.map-close-btn:hover {
+    background: #e0e0e0;
+    color: #333;
+    transform: none;
+}
+
+/* PETUNJUK */
+.map-hint {
+    font-size: 13px;
+    color: #ff8c42;
+    font-style: italic;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+/* MAP CONTAINER */
+#map {
+    flex: 1;
+    height: calc(100% - 120px);
+    min-height: 300px;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    margin-top: 0;
+}
+
+/* RESPONSIVE MOBILE */
+@media (max-width: 600px) {
+    .map-search-bar {
+        flex-direction: column;
+    }
+
+    .map-search-bar input {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .map-search-bar button {
+        width: 100%;
+    }
+
+    .modal-content {
+        padding: 15px;
+    }
+
+    #map {
+        height: calc(100% - 200px);
+    }
+}

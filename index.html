@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AmbulanMu Seyegan</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="style.css">
 </head>
 
@@ -34,29 +35,28 @@
                 <option value="Sabtu">Sabtu</option>
                 <option value="Minggu">Minggu</option>
             </select>
-            
+
             <input id="tanggal1" type="number" min="1" max="31" placeholder="Tgl" class="tanggal-input">
-            
+
             <select id="bulan1" class="bulan-select">
                 <option value="">Bulan</option>
-                <!-- Diisi otomatis JS -->
             </select>
-            
-            <input id="tahun1" type="number" min="2024" max="2026" placeholder="Thn" class="tahun-input">
-            <small class="tanggal-hint">Tahun 2024-2026</small>
+
+            <input id="tahun1" type="number" min="2024" placeholder="Thn" class="tahun-input">
+            <small class="tanggal-hint">Tahun 2024 ke atas</small>
         </div>
 
         <input id="nama1" placeholder="Nama Pasien">
         <input id="usia1" type="number" min="0" max="120" placeholder="Usia (tahun)">
-        
+
         <select id="kondisi">
             <option value="">Kondisi Pasien</option>
             <option value="Duduk">Duduk</option>
             <option value="Berbaring">Berbaring</option>
         </select>
-        
+
         <input id="penyakit" placeholder="Penyakit/Keluhan">
-        
+
         <select id="tbc">
             <option value="">Apakah TBC?</option>
             <option value="Ya">Ya</option>
@@ -64,17 +64,17 @@
         </select>
 
         <div class="lokasi-group">
-            <input id="sherlock" placeholder="Sherlock Rumah - Copy dari Google Maps" readonly>
-            <button type="button" class="btn-lokasi" onclick="bukaMap('sherlock')">📱 Buka Google Maps</button>
+            <input id="sherlock" placeholder="Sherlock Rumah - Klik tombol di bawah" readonly>
+            <button type="button" class="btn-lokasi" onclick="bukaMap('sherlock')">🗺️ Pilih Lokasi di Peta</button>
         </div>
 
         <textarea id="alamatAntar1" placeholder="Alamat Tujuan Antar"></textarea>
-        
+
         <div class="jam-group">
-            <input id="jam1" type="time" >
+            <input id="jam1" type="time">
             <small class="jam-hint">Jam permintaan layanan</small>
         </div>
-        
+
         <input id="pendamping" type="number" min="0" max="10" placeholder="Jumlah Pendamping (0-10)">
         <input id="kontak1" placeholder="Kontak HP/WA (WAJIB*)">
 
@@ -94,41 +94,70 @@
                 <option value="Sabtu">Sabtu</option>
                 <option value="Minggu">Minggu</option>
             </select>
-            
+
             <input id="tanggal2" type="number" min="1" max="31" placeholder="Tgl" class="tanggal-input">
-            
+
             <select id="bulan2" class="bulan-select">
                 <option value="">Bulan</option>
-                <!-- Diisi otomatis JS -->
             </select>
-            
-            <input id="tahun2" type="number" min="2024" max="2026" placeholder="Thn" class="tahun-input">
-            <small class="tanggal-hint">Tahun 2024-2026</small>
+
+            <input id="tahun2" type="number" min="2024" placeholder="Thn" class="tahun-input">
+            <small class="tanggal-hint">Tahun 2024 ke atas</small>
         </div>
 
         <input id="nama2" placeholder="Nama Almarhum/Almarhumah">
         <input id="usia2" type="number" min="0" max="120" placeholder="Usia (tahun)">
 
         <div class="lokasi-group">
-            <input id="maps" placeholder="Lokasi Map - Copy dari Google Maps" readonly>
-            <button type="button" class="btn-lokasi" onclick="bukaMap('maps')">📱 Buka Google Maps</button>
+            <input id="maps" placeholder="Lokasi Map - Klik tombol di bawah" readonly>
+            <button type="button" class="btn-lokasi" onclick="bukaMap('maps')">🗺️ Pilih Lokasi di Peta</button>
         </div>
 
         <textarea id="alamatAntar2" placeholder="Alamat Tujuan Antar"></textarea>
-        
+
         <div class="jam-group">
-            <input id="jam2" type="time" >
+            <input id="jam2" type="time">
             <small class="jam-hint">Jam permintaan layanan</small>
         </div>
-        
+
         <input id="kontak2" placeholder="Kontak HP/WA (WAJIB*)">
         <input id="sakit" placeholder="Sakit sebelum meninggal">
-        <input id="peti" placeholder="Peti mati (Ya/Tidak))">
+        <input id="peti" placeholder="Peti mati (Ya/Tidak)">
 
         <button onclick="kirim('jenazah')">🚀 Kirim Permintaan</button>
     </div>
 </div>
 
+<!-- MAP MODAL -->
+<div id="mapModal" class="modal" onclick="if(event.target===this)tutupMap()">
+    <div class="modal-content">
+
+        <!-- SEARCH BAR -->
+        <div class="map-search-bar">
+            <input
+                id="mapSearchInput"
+                type="text"
+                placeholder="🔍 Cari alamat atau nama tempat..."
+                onkeydown="if(event.key==='Enter')cariAlamat()"
+            >
+            <button id="mapSearchBtn" onclick="cariAlamat()">Cari</button>
+            <button id="mapGPSBtn" onclick="ambilGPSdiMap()">📡 Lokasi Saya</button>
+            <button class="map-close-btn" onclick="tutupMap()">✕ Tutup</button>
+        </div>
+
+        <!-- DROPDOWN HASIL PENCARIAN -->
+        <div id="mapSearchResults" style="display:none; position:absolute; top:110px; left:30px; right:30px; background:white; border:1px solid #ddd; border-radius:10px; z-index:9999; max-height:200px; overflow-y:auto; box-shadow:0 4px 15px rgba(0,0,0,0.15);"></div>
+
+        <!-- PETUNJUK -->
+        <p class="map-hint">👆 Cari alamat atau klik lokasi di peta untuk memilih titik penjemputan</p>
+
+        <!-- MAP CONTAINER -->
+        <div id="map"></div>
+
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
