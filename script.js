@@ -142,9 +142,60 @@ window.onload = function(){
 };
 
 /* =========================
-   KIRIM WA (UPDATED)
+   VALIDASI FORM
+========================= */
+function validasiForm(jenis) {
+    if(jenis === "pasien") {
+        // ✅ WAJIB SHERLOCK DIISI
+        if(!sherlock.value || sherlock.value.trim() === "") {
+            alert("❌ Sherlock Rumah WAJIB diisi! Silakan pilih lokasi di peta.");
+            sherlock.focus();
+            return false;
+        }
+        
+        // Cek nama & kontak minimal
+        if(!nama1.value.trim()) {
+            alert("❌ Nama Pasien harus diisi!");
+            nama1.focus();
+            return false;
+        }
+        if(!kontak1.value.trim()) {
+            alert("❌ Kontak HP/WA harus diisi!");
+            kontak1.focus();
+            return false;
+        }
+    } else {
+        // JENAZAH - WAJIB MAP DIISI
+        if(!maps.value || maps.value.trim() === "") {
+            alert("❌ Lokasi Map WAJIB diisi! Silakan pilih lokasi di peta.");
+            maps.focus();
+            return false;
+        }
+        
+        // Cek nama & kontak minimal
+        if(!nama2.value.trim()) {
+            alert("❌ Nama harus diisi!");
+            nama2.focus();
+            return false;
+        }
+        if(!kontak2.value.trim()) {
+            alert("❌ Kontak HP/WA harus diisi!");
+            kontak2.focus();
+            return false;
+        }
+    }
+    return true;
+}
+
+/* =========================
+   KIRIM WA (DENGAN VALIDASI)
 ========================= */
 function kirim(jenis){
+    // ✅ VALIDASI DULU
+    if(!validasiForm(jenis)) {
+        return; // STOP jika gagal validasi
+    }
+
     let nomor = "6285713322154";
     let pesan = "";
 
