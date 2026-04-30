@@ -86,3 +86,38 @@ button {
 #map {
     height:90%;
 }
+
+/* PILIHAN LAYANAN */
+.pilihan {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.pilihan input {
+    display: none;
+}
+
+.pilihan label {
+    padding: 10px 25px;
+    border-radius: 25px;
+    background: #fff3e6;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+    border: 2px solid transparent;
+}
+
+/* saat dipilih */
+.pilihan input:checked + label {
+    background: #ff7a00;
+    color: white;
+    border: 2px solid #ff7a00;
+}
+
+/* hover */
+.pilihan label:hover {
+    transform: scale(1.05);
+}
