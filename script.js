@@ -10,38 +10,122 @@ function pilihForm(jenis){
 }
 
 /* =========================
-   MAP PICKER
+   VALIDASI FORM
+========================= */
+function validasiForm(jenis) {
+    if(jenis === "pasien") {
+        if(!sherlock.value || sherlock.value === "Alamat tidak ditemukan") {
+            alert("❌ Sherlock Rumah wajib diisi! Silakan pilih lokasi di peta.");
+            sherlock.focus();
+            return false;
+        }
+        if(!nama1.value.trim()) {
+            alert("❌ Nama Pasien wajib diisi!");
+            nama1.focus();
+            return false;
+        }
+        if(!kontak1.value.trim()) {
+            alert("❌ Kontak HP/WA wajib diisi!");
+            kontak1.focus();
+            return false;
+        }
+        return true;
+    } else {
+        if(!maps.value || maps.value === "Alamat tidak ditemukan") {
+            alert("❌ Lokasi Map wajib diisi! Silakan pilih lokasi di peta.");
+            maps.focus();
+            return false;
+        }
+        if(!nama2.value.trim()) {
+            alert("❌ Nama wajib diisi!");
+            nama2.focus();
+            return false;
+        }
+        if(!kontak2.value.trim()) {
+            alert("❌ Kontak HP/WA wajib diisi!");
+            kontak2.focus();
+            return false;
+        }
+        return true;
+    }
+}
+
+/* =========================
+   MAP PICKER - GOOGLE MAPS UNTUK SHERLOCK
 ========================= */
 function bukaMap(inputId){
     targetInput = inputId;
+    
+    if(inputId === "sherlock") {
+        // ✅ GOOGLE MAPS UNTUK SHERLOCK (LEBIH AKURAT)
+        bukaGoogleMaps();
+    } else {
+        // LEAFLET UNTUK JENAZAH (maps)
+        bukaLeafletMap();
+    }
+}
+
+/* GOOGLE MAPS UNTUK SHERLOCK */
+function bukaGoogleMaps() {
+    // Buka Google Maps dengan mode pilih lokasi
+    let url = `https://www.google.com/maps/search/?api=1&query=&query_place_id=&q=`;
+    
+    // Coba ambil lokasi user dulu
+    if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(posisi) {
+                let lat = posisi.coords.latitude;
+                let lon = posisi.coords.longitude;
+                url = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
+                window.open(url, '_blank');
+            },
+            function() {
+                // Jika GPS gagal, buka maps biasa
+                window.open('https://www.google.com/maps', '_blank');
+            },
+            { enableHighAccuracy: true }
+        );
+    } else {
+        window.open('https://www.google.com/maps', '_blank');
+    }
+    
+    // TUTUP MODAL (tidak perlu modal untuk Google Maps)
+}
+
+/* LEAFLET MAP UNTUK JENAZAH */
+function bukaLeafletMap() {
     document.getElementById("mapModal").style.display = "block";
 
     setTimeout(()=>{
         if(!map){
-            map = L.map('map').setView([-7.7,110.35], 13);
+            map = L.map('map').setView([-7.7,110.35], 14);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-                attribution:'© OpenStreetMap'
+                attribution:'© OpenStreetMap contributors'
             }).addTo(map);
 
-            // klik map
+            let customIcon = L.divIcon({
+                className: 'custom-marker',
+                html: '📍',
+                iconSize: [30, 30],
+                iconAnchor: [15, 30]
+            });
+
             map.on('click', function(e){
                 if(marker) map.removeLayer(marker);
-                marker = L.marker(e.latlng).addTo(map);
-
+                marker = L.marker(e.latlng, {icon: customIcon}).addTo(map);
+                map.setView(e.latlng, 17);
                 ambilAlamat(e.latlng.lat, e.latlng.lng, targetInput);
             });
         }
 
-        // FIX: resize map biar ga blank
         setTimeout(() => {
             map.invalidateSize();
-        }, 200);
+        }, 300);
 
-        // ambil lokasi user saat buka map
         ambilLokasiOtomatis();
 
-    },200);
+    },300);
 }
 
 function tutupMap(){
@@ -49,61 +133,95 @@ function tutupMap(){
 }
 
 /* =========================
-   AUTO LOKASI USER
+   AUTO LOKASI USER (UNTUK JENAZAH SAJA)
 ========================= */
 function ambilLokasiOtomatis(){
-    if(navigator.geolocation){
+    if(navigator.geolocation && targetInput === "maps"){
         navigator.geolocation.getCurrentPosition(
             function(posisi){
                 let lat = posisi.coords.latitude;
                 let lon = posisi.coords.longitude;
-
+                
                 if(map){
-                    map.setView([lat, lon], 15);
+                    let zoomLevel = posisi.coords.accuracy < 20 ? 18 : 16;
+                    map.setView([lat, lon], zoomLevel);
 
                     if(marker) map.removeLayer(marker);
-                    marker = L.marker([lat, lon]).addTo(map);
+                    
+                    let customIcon = L.divIcon({
+                        className: 'custom-marker',
+                        html: '📍',
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 30]
+                    });
+                    marker = L.marker([lat, lon], {icon: customIcon}).addTo(map);
                 }
 
-                // isi otomatis
-                ambilAlamat(lat, lon, "sherlock");
                 ambilAlamat(lat, lon, "maps");
             },
-            function(){
-                console.log("Lokasi tidak diizinkan");
-            }
+            function(){},
+            { enableHighAccuracy: true }
         );
     }
 }
 
 /* =========================
-   AMBIL ALAMAT (FIX API)
+   AMBIL ALAMAT (UNTUK JENAZAH SAJA)
 ========================= */
 function ambilAlamat(lat, lon, inputId){
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`, {
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1&zoom=18`, {
         headers: {
-            'User-Agent': 'ambulans-app'
+            'User-Agent': 'AmbulanMu-Seyegan/1.0'
         }
     })
     .then(res => res.json())
     .then(data => {
-        let alamat = data.display_name || "Alamat tidak ditemukan";
-        let hasil = alamat + " | https://maps.google.com/?q=" + lat + "," + lon;
-
+        let alamatLengkap = "";
+        
+        if(data && data.display_name) {
+            let address = data.address;
+            alamatLengkap = [
+                address.road || '',
+                address.neighbourhood || address.suburb || '',
+                address.village || address.town || address.city || '',
+                address.state || ''
+            ].filter(part => part).join(', ') || data.display_name;
+        } else {
+            alamatLengkap = "Alamat tidak ditemukan";
+        }
+        
+        let hasil = `${alamatLengkap} | https://maps.google.com/?q=${lat},${lon}`;
+        
         let el = document.getElementById(inputId);
         if(el){
             el.value = hasil;
+            el.style.backgroundColor = '#d4edda';
+            setTimeout(() => {
+                el.style.backgroundColor = '';
+            }, 1000);
         }
 
         simpanData();
     })
     .catch(()=>{
-        alert("Gagal mengambil alamat");
+        let hasil = `Lat:${lat.toFixed(6)}, Lon:${lon.toFixed(6)} | https://maps.google.com/?q=${lat},${lon}`;
+        let el = document.getElementById(inputId);
+        if(el) el.value = hasil;
     });
 }
 
 /* =========================
-   SIMPAN DATA
+   FUNGSI GOOGLE MAPS CALLBACK (UNTUK SHERLOCK)
+========================= */
+function isiSherlockDariGoogle(alamat, lat, lon) {
+    // User bisa copy-paste hasil dari Google Maps
+    let hasil = `${alamat} | https://maps.google.com/?q=${lat},${lon}`;
+    document.getElementById('sherlock').value = hasil;
+    simpanData();
+}
+
+/* =========================
+   SIMPAN & LOAD DATA
 ========================= */
 function simpanData(){
     let data = {};
@@ -115,9 +233,6 @@ function simpanData(){
     localStorage.setItem("ambulansData", JSON.stringify(data));
 }
 
-/* =========================
-   LOAD DATA
-========================= */
 function loadData(){
     let data = JSON.parse(localStorage.getItem("ambulansData"));
     if(data){
@@ -130,78 +245,24 @@ function loadData(){
     }
 }
 
-/* AUTO SAVE */
 document.addEventListener("input", simpanData);
 document.addEventListener("change", simpanData);
 
-/* =========================
-   LOAD AWAL (TANPA MAP)
-========================= */
 window.onload = function(){
     loadData();
 };
 
 /* =========================
-   VALIDASI FORM
-========================= */
-function validasiForm(jenis) {
-    if(jenis === "pasien") {
-        // ✅ WAJIB SHERLOCK DIISI
-        if(!sherlock.value || sherlock.value.trim() === "") {
-            alert("❌ Sherlock Rumah WAJIB diisi! Silakan pilih lokasi di peta.");
-            sherlock.focus();
-            return false;
-        }
-        
-        // Cek nama & kontak minimal
-        if(!nama1.value.trim()) {
-            alert("❌ Nama Pasien harus diisi!");
-            nama1.focus();
-            return false;
-        }
-        if(!kontak1.value.trim()) {
-            alert("❌ Kontak HP/WA harus diisi!");
-            kontak1.focus();
-            return false;
-        }
-    } else {
-        // JENAZAH - WAJIB MAP DIISI
-        if(!maps.value || maps.value.trim() === "") {
-            alert("❌ Lokasi Map WAJIB diisi! Silakan pilih lokasi di peta.");
-            maps.focus();
-            return false;
-        }
-        
-        // Cek nama & kontak minimal
-        if(!nama2.value.trim()) {
-            alert("❌ Nama harus diisi!");
-            nama2.focus();
-            return false;
-        }
-        if(!kontak2.value.trim()) {
-            alert("❌ Kontak HP/WA harus diisi!");
-            kontak2.focus();
-            return false;
-        }
-    }
-    return true;
-}
-
-/* =========================
-   KIRIM WA (DENGAN VALIDASI)
+   KIRIM WA
 ========================= */
 function kirim(jenis){
-    // ✅ VALIDASI DULU
-    if(!validasiForm(jenis)) {
-        return; // STOP jika gagal validasi
-    }
-
+    if(!validasiForm(jenis)) return;
+    
     let nomor = "6285713322154";
     let pesan = "";
 
     if(jenis==="pasien"){
         let tanggalLengkap = `${hari1.value || ''} ${tanggal1.value || ''} ${bulan1.value || ''} ${tahun1.value || ''}`.trim();
-        
         pesan = `FORM PERMOHONAN AMBULANMU (PASIEN)
 
 Hari/Tanggal: ${tanggalLengkap}
@@ -211,37 +272,29 @@ Kondisi: ${kondisi.value}
 Penyakit: ${penyakit.value}
 TBC: ${tbc.value}
 
-Sherlock Rumah:
-${sherlock.value}
+Sherlock Rumah: ${sherlock.value}
 
-Alamat Antar:
-${alamatAntar1.value}
+Alamat Antar: ${alamatAntar1.value}
 
-Jam Penjemputan: ${jam1.value}
-Jumlah Pendamping: ${pendamping.value}
-Kontak: ${kontak1.value}
-`;
-
+Jam: ${jam1.value}
+Pendamping: ${pendamping.value}
+Kontak: ${kontak1.value}`;
     } else {
         let tanggalLengkap = `${hari2.value || ''} ${tanggal2.value || ''} ${bulan2.value || ''} ${tahun2.value || ''}`.trim();
-        
         pesan = `FORM PERMOHONAN AMBULANMU (JENAZAH)
 
 Hari/Tanggal: ${tanggalLengkap}
 Nama: ${nama2.value}
 Usia: ${usia2.value}
 
-Lokasi Map:
-${maps.value}
+Lokasi Map: ${maps.value}
 
-Alamat Antar:
-${alamatAntar2.value}
+Alamat Antar: ${alamatAntar2.value}
 
-Jam Penjemputan: ${jam2.value}
+Jam: ${jam2.value}
 Kontak: ${kontak2.value}
-Sakit sebelum meninggal: ${sakit.value}
-Peti: ${peti.value}
-`;
+Sakit: ${sakit.value}
+Peti: ${peti.value}`;
     }
 
     let url = "https://wa.me/" + nomor + "?text=" + encodeURIComponent(pesan);
