@@ -6,8 +6,6 @@
 <title>AmbulanMu Seyegan</title>
 
 <link rel="stylesheet" href="style.css">
-
-<!-- Leaflet (Map) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 </head>
 
@@ -59,9 +57,22 @@
 
         <input id="nama1" placeholder="Nama Pasien">
         <input id="usia1" type="number" min="0" max="120" placeholder="Usia">
-        <input id="kondisi" placeholder="Kondisi (duduk/berbaring)">
+        
+        <!-- ✅ PILIHAN KONDITSI (TANPA EMOJI) -->
+        <select id="kondisi">
+            <option value="">Pilih Kondisi</option>
+            <option value="Duduk">Duduk</option>
+            <option value="Berbaring">Berbaring</option>
+        </select>
+        
         <input id="penyakit" placeholder="Penyakit">
-        <input id="tbc" placeholder="TBC (Ya/Tidak)">
+        
+        <!-- ✅ PILIHAN TBC (TANPA EMOJI) -->
+        <select id="tbc">
+            <option value="">Pilih TBC</option>
+            <option value="Ya">Ya</option>
+            <option value="Tidak">Tidak</option>
+        </select>
 
         <input id="sherlock" placeholder="Sherlock Rumah" readonly>
         <button type="button" class="btn-lokasi" onclick="bukaMap('sherlock')">📍 Pilih di Map</button>
