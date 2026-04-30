@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmbulanMu Seyegan</title>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- Leaflet (Map) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>AmbulanMu Seyegan</h2>
+    <p class="subtitle">Form Permohonan Layanan Ambulans</p>
+
+    <div class="pilihan">
+        <input type="radio" id="pasienRadio" name="layanan" onclick="pilihForm('pasien')">
+        <label for="pasienRadio">Pasien</label>
+
+        <input type="radio" id="jenazahRadio" name="layanan" onclick="pilihForm('jenazah')">
+        <label for="jenazahRadio">Jenazah</label>
+    </div>
+
+    <!-- FORM PASIEN -->
+    <div id="pasien" class="form">
+        <input id="tanggal1" placeholder="Hari, Tanggal">
+        <input id="nama1" placeholder="Nama Pasien">
+        <input id="usia1" placeholder="Usia">
+        <input id="kondisi" placeholder="Kondisi (duduk/berbaring)">
+        <input id="penyakit" placeholder="Penyakit">
+        <input id="tbc" placeholder="TBC (Ya/Tidak)">
+        <textarea id="alamatJemput1" placeholder="Alamat Penjemputan"></textarea>
+
+        <input id="sherlock" placeholder="Sherlock Rumah" readonly>
+        <button type="button" class="btn-lokasi" onclick="bukaMap('sherlock')">📍 Pilih di Map</button>
+
+        <textarea id="alamatAntar1" placeholder="Alamat Antar"></textarea>
+        <input id="jam1" placeholder="Jam Penjemputan">
+        <input id="pendamping" placeholder="Jumlah Pendamping">
+        <input id="kontak1" placeholder="Kontak HP/WA">
+
+        <button onclick="kirim('pasien')">Kirim ke WhatsApp</button>
+    </div>
+
+    <!-- FORM JENAZAH -->
+    <div id="jenazah" class="form">
+        <input id="tanggal2" placeholder="Hari, Tanggal">
+        <input id="nama2" placeholder="Nama">
+        <input id="usia2" placeholder="Usia">
+        <textarea id="alamatJemput2" placeholder="Alamat Penjemputan"></textarea>
+
+        <input id="maps" placeholder="Lokasi Map" readonly>
+        <button type="button" class="btn-lokasi" onclick="bukaMap('maps')">📍 Pilih di Map</button>
+
+        <textarea id="alamatAntar2" placeholder="Alamat Antar"></textarea>
+        <input id="jam2" placeholder="Jam Penjemputan">
+        <input id="kontak2" placeholder="Kontak HP/WA">
+        <input id="sakit" placeholder="Sakit sebelum meninggal">
+        <input id="peti" placeholder="Peti/Tidak">
+
+        <button onclick="kirim('jenazah')">Kirim ke WhatsApp</button>
+    </div>
+</div>
+
+<!-- MODAL MAP -->
+<div id="mapModal" class="modal">
+    <div class="modal-content">
+        <div id="map"></div>
+        <button onclick="tutupMap()">Selesai</button>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

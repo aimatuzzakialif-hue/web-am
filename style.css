@@ -1,0 +1,88 @@
+body {
+    font-family: Arial;
+    background: linear-gradient(to bottom, #fff5ec, #ffe3cc);
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(255,122,0,0.2);
+}
+
+h2 {
+    text-align: center;
+    color: #ff7a00;
+}
+
+.subtitle {
+    text-align: center;
+    color: gray;
+}
+
+.pilihan input { display:none; }
+
+.pilihan label {
+    padding:10px 20px;
+    background:#fff3e6;
+    border-radius:20px;
+    cursor:pointer;
+    margin:5px;
+}
+
+.pilihan input:checked + label {
+    background:#ff7a00;
+    color:white;
+}
+
+input, textarea {
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:10px;
+    border:1px solid #ffd1a6;
+}
+
+button {
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    background:#ff7a00;
+    color:white;
+    border:none;
+    border-radius:10px;
+}
+
+.btn-lokasi {
+    background:white;
+    color:#ff7a00;
+    border:2px dashed #ff7a00;
+}
+
+.form { display:none; }
+.aktif { display:block; }
+
+/* MAP MODAL */
+.modal {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    width:90%;
+    height:80%;
+    margin:5% auto;
+    background:white;
+    padding:10px;
+    border-radius:10px;
+}
+
+#map {
+    height:90%;
+}
