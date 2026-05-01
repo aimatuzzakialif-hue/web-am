@@ -1,27 +1,7 @@
-/* Tambahkan ini di akhir file CSS Anda */
-select {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border-radius: 10px;
-    border: 1px solid #ffd1a6;
-    background: white;
-    font-size: 16px;
-}
-
-input[type="number"], input[type="time"] {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border-radius: 10px;
-    border: 1px solid #ffd1a6;
-}
-
 /* ========================================
-   AMBULANMU SEYEGAN - ORANGE THEME (NO SPIN)
+   AMBULANMU SEYEGAN - ORANGE THEME
 ======================================== */
 
-/* RESET & BASE */
 * {
     margin: 0;
     padding: 0;
@@ -37,7 +17,6 @@ body {
     overflow-x: hidden;
 }
 
-/* BACKGROUND HALUS (TANPA ANIMASI) */
 body::before {
     content: '';
     position: fixed;
@@ -51,7 +30,6 @@ body::before {
     z-index: -1;
 }
 
-/* CONTAINER UTAMA - GLASSMORPHISM */
 .container {
     max-width: 650px;
     margin: 0 auto;
@@ -75,7 +53,6 @@ body::before {
         0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
-/* TYPOGRAPHY - GRADIENT TEXT */
 h2 {
     text-align: center;
     color: #ff6b35;
@@ -113,12 +90,12 @@ h2::after {
     letter-spacing: 1px;
 }
 
-/* PILIHAN LAYANAN - 3D BUTTONS */
+/* PILIHAN LAYANAN */
 .pilihan {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
     margin-bottom: 35px;
     flex-wrap: wrap;
 }
@@ -128,12 +105,12 @@ h2::after {
 }
 
 .pilihan label {
-    padding: 18px 35px;
+    padding: 16px 28px;
     border-radius: 50px;
     background: linear-gradient(145deg, #fff8f0, #ffe8d6);
     cursor: pointer;
     font-weight: 700;
-    font-size: 1.1em;
+    font-size: 1.05em;
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     border: 3px solid transparent;
     position: relative;
@@ -141,7 +118,7 @@ h2::after {
     box-shadow: 
         0 10px 30px rgba(255, 107, 53, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    min-width: 140px;
+    min-width: 120px;
     text-align: center;
 }
 
@@ -171,6 +148,16 @@ h2::after {
     border-color: rgba(255, 107, 53, 0.5);
 }
 
+/* Emergency radio check khusus merah */
+#emergencyRadio:checked + label {
+    background: linear-gradient(145deg, #c0392b, #e74c3c) !important;
+    box-shadow: 
+        0 25px 50px rgba(192, 57, 43, 0.45),
+        0 0 0 4px rgba(192, 57, 43, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(192, 57, 43, 0.5) !important;
+}
+
 .pilihan label:hover {
     transform: translateY(-4px);
     box-shadow: 
@@ -178,11 +165,11 @@ h2::after {
         inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-/* FORM INPUTS - PREMIUM GLASS */
+/* FORM INPUTS */
 input, textarea, select {
     width: 100%;
-    padding: 20px 22px;
-    margin: 15px 0;
+    padding: 18px 20px;
+    margin: 12px 0;
     border-radius: 25px;
     border: 2px solid rgba(255, 139, 66, 0.25);
     background: rgba(255, 255, 255, 0.9);
@@ -190,9 +177,8 @@ input, textarea, select {
     font-size: 16px;
     transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     box-shadow: 
-        0 8px 25px rgba(0, 0, 0, 0.1),
+        0 8px 25px rgba(0, 0, 0, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    position: relative;
 }
 
 input:focus, textarea:focus, select:focus {
@@ -201,8 +187,8 @@ input:focus, textarea:focus, select:focus {
     background: rgba(255, 255, 255, 1);
     transform: translateY(-3px);
     box-shadow: 
-        0 20px 45px rgba(255, 107, 53, 0.25),
-        0 0 0 5px rgba(255, 107, 53, 0.15),
+        0 20px 45px rgba(255, 107, 53, 0.2),
+        0 0 0 5px rgba(255, 107, 53, 0.12),
         inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
@@ -212,7 +198,6 @@ input::placeholder, textarea::placeholder {
     letter-spacing: 0.5px;
 }
 
-/* JAM INPUT SPECIAL */
 input[type="time"] {
     font-size: 18px;
     text-align: center;
@@ -221,7 +206,7 @@ input[type="time"] {
     font-family: 'Courier New', monospace;
 }
 
-/* MAIN BUTTON - HERO STYLE */
+/* MAIN BUTTON */
 button {
     width: 100%;
     padding: 22px;
@@ -230,7 +215,7 @@ button {
     color: white;
     border: none;
     border-radius: 30px;
-    font-size: 1.25em;
+    font-size: 1.2em;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -265,12 +250,29 @@ button:hover {
         inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
+/* BUTTON EMERGENCY - MERAH */
+.btn-emergency {
+    background: linear-gradient(145deg, #c0392b, #e74c3c) !important;
+    box-shadow: 
+        0 15px 40px rgba(192, 57, 43, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    font-size: 1.3em !important;
+    letter-spacing: 2px !important;
+}
+
+.btn-emergency:hover {
+    box-shadow: 
+        0 25px 60px rgba(192, 57, 43, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+/* BUTTON LOKASI */
 .btn-lokasi {
     background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 248, 240, 0.95));
     color: #ff6b35;
     border: 3px dashed #ff8c42;
     font-weight: 700;
-    font-size: 1.15em;
+    font-size: 1.05em;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -284,6 +286,37 @@ button:hover {
         inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
+.btn-lokasi-emg {
+    border-color: #c0392b !important;
+    color: #c0392b !important;
+    border-style: dashed !important;
+}
+
+.btn-lokasi-emg:hover {
+    background: linear-gradient(145deg, #fff5f5, #ffe0de) !important;
+    border-color: #c0392b !important;
+}
+
+/* EMERGENCY BANNER */
+.emergency-banner {
+    background: linear-gradient(145deg, #c0392b, #e74c3c);
+    color: white;
+    text-align: center;
+    padding: 16px 20px;
+    border-radius: 20px;
+    font-size: 1.15em;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+    animation: blink-border 1.5s infinite;
+    box-shadow: 0 8px 25px rgba(192, 57, 43, 0.4);
+}
+
+@keyframes blink-border {
+    0%, 100% { box-shadow: 0 8px 25px rgba(192, 57, 43, 0.4); }
+    50% { box-shadow: 0 8px 35px rgba(192, 57, 43, 0.7), 0 0 0 5px rgba(231, 76, 60, 0.2); }
+}
+
 /* FORM STATE */
 .form { 
     display: none; 
@@ -295,17 +328,11 @@ button:hover {
 }
 
 @keyframes slideInUp {
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* MAP MODAL - CLEAN & BEAUTIFUL */
+/* MAP MODAL */
 .modal {
     display: none;
     position: fixed;
@@ -325,138 +352,26 @@ button:hover {
     background: rgba(255, 255, 255, 0.97);
     backdrop-filter: blur(30px);
     border-radius: 25px;
-    padding: 30px;
+    padding: 20px;
     box-shadow: 
         0 35px 90px rgba(0, 0, 0, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(255, 107, 53, 0.25);
     position: relative;
-    overflow: hidden;
-}
-
-.modal-content::before {
-    content: '📍 PILIH LOKASI PENJEMPUTAN';
-    position: absolute;
-    top: 25px;
-    left: 30px;
-    font-size: 1.4em;
-    font-weight: 700;
-    color: #ff6b35;
-    z-index: 10;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 #map {
-    height: 86%;
-    border-radius: 22px;
-    margin-top: 70px;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+    flex: 1;
+    min-height: 300px;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    margin-top: 0;
 }
 
-/* RESPONSIVE - MOBILE FIRST */
-@media (max-width: 768px) {
-    body { padding: 15px; }
-    .container { 
-        padding: 35px 25px; 
-        margin: 10px;
-        border-radius: 25px;
-    }
-    h2 { font-size: 2.1em; }
-    .pilihan { gap: 15px; }
-    .pilihan label { 
-        padding: 16px 28px; 
-        font-size: 1em;
-        min-width: 130px;
-    }
-}
-
-@media (max-width: 480px) {
-    h2 { font-size: 1.9em; }
-    .container { padding: 30px 20px; }
-    input, textarea, select { padding: 18px 18px; }
-    button { padding: 20px; font-size: 1.15em; }
-    .pilihan label { 
-        padding: 14px 24px; 
-        min-width: 120px;
-        font-size: 0.95em;
-    }
-}
-
-/* TANGGAL GROUP */
-.tanggal-group {
-    display: grid;
-    grid-template-columns: 1fr 0.8fr 1.5fr 0.7fr;
-    gap: 10px;
-    margin-bottom: 15px;
-    align-items: end;
-}
-
-.hari-select, .bulan-select {
-    min-height: 55px;
-}
-
-.tanggal-input, .tahun-input {
-    max-width: 80px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.tanggal-hint {
-    font-size: 12px;
-    color: #ff8c42;
-    font-weight: 500;
-    grid-column: 1 / -1;
-    margin-top: 5px;
-}
-
-/* JAM GROUP */
-.jam-group {
-    position: relative;
-}
-
-.jam-hint {
-    display: block;
-    font-size: 12px;
-    color: #ff8c42;
-    font-weight: 500;
-    margin-top: 5px;
-    font-style: italic;
-}
-
-/* LOKASI GROUP */
-.lokasi-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-@media (max-width: 768px) {
-    .tanggal-group {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-    
-    .tanggal-input, .tahun-input {
-        max-width: 100%;
-    }
-}
-
-/* ============================================
-   TAMBAHAN CSS - MAP MODAL SEARCH & GPS
-   Tambahkan ini di bagian BAWAH file style.css
-============================================ */
-
-/* MODAL LAYOUT */
-.modal-content {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    gap: 0;
-    position: relative;
-}
-
-/* SEARCH BAR */
+/* MAP SEARCH BAR */
 .map-search-bar {
     display: flex;
     gap: 8px;
@@ -528,7 +443,6 @@ button:hover {
     transform: none;
 }
 
-/* PETUNJUK */
 .map-hint {
     font-size: 13px;
     color: #ff8c42;
@@ -537,36 +451,93 @@ button:hover {
     font-weight: 500;
 }
 
-/* MAP CONTAINER */
-#map {
-    flex: 1;
-    height: calc(100% - 120px);
-    min-height: 300px;
-    border-radius: 18px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-    margin-top: 0;
+/* TANGGAL GROUP */
+.tanggal-group {
+    display: grid;
+    grid-template-columns: 1fr 0.8fr 1.5fr 0.7fr;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: end;
 }
 
-/* RESPONSIVE MOBILE */
-@media (max-width: 600px) {
+.hari-select, .bulan-select {
+    min-height: 55px;
+}
+
+.tanggal-input, .tahun-input {
+    max-width: 80px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.tanggal-hint {
+    font-size: 12px;
+    color: #ff8c42;
+    font-weight: 500;
+    grid-column: 1 / -1;
+    margin-top: 2px;
+}
+
+/* JAM GROUP */
+.jam-group {
+    position: relative;
+}
+
+.jam-hint {
+    display: block;
+    font-size: 12px;
+    color: #ff8c42;
+    font-weight: 500;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+/* LOKASI GROUP */
+.lokasi-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    body { padding: 15px; }
+    .container { 
+        padding: 30px 20px; 
+        margin: 10px;
+        border-radius: 25px;
+    }
+    h2 { font-size: 2em; }
+    .pilihan { gap: 10px; }
+    .pilihan label { 
+        padding: 14px 20px; 
+        font-size: 0.95em;
+        min-width: 100px;
+    }
+    .tanggal-group {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    .tanggal-input, .tahun-input {
+        max-width: 100%;
+    }
     .map-search-bar {
         flex-direction: column;
     }
-
-    .map-search-bar input {
+    .map-search-bar input,
+    .map-search-bar button {
         width: 100%;
         min-width: unset;
     }
-
-    .map-search-bar button {
-        width: 100%;
-    }
-
     .modal-content {
         padding: 15px;
     }
+}
 
-    #map {
-        height: calc(100% - 200px);
-    }
+@media (max-width: 480px) {
+    h2 { font-size: 1.8em; }
+    .container { padding: 25px 16px; }
+    input, textarea, select { padding: 16px 16px; }
+    button { padding: 18px; font-size: 1.05em; }
 }

@@ -1,4 +1,4 @@
-/* SCRIPT AMBULANMU SEYEGAN - WITH SEARCH & GPS MAP */
+/* SCRIPT AMBULANMU SEYEGAN - WITH EMERGENCY FORM */
 let nomorWA = "6285713322154";
 
 const BULAN_MAX_HARI = {
@@ -16,8 +16,9 @@ const BULAN_LIST = [
    INISIALISASI BULAN
 ========================= */
 function initBulan() {
-    ['bulan1', 'bulan2'].forEach(id => {
+    ['bulan1', 'bulan2', 'bulan3'].forEach(id => {
         let select = document.getElementById(id);
+        if (!select) return;
         BULAN_LIST.forEach(bulan => {
             let option = document.createElement('option');
             option.value = bulan;
@@ -30,6 +31,7 @@ function initBulan() {
 function updateTanggalMax(bulanId, tanggalId) {
     let bulanSelect = document.getElementById(bulanId);
     let tanggalInput = document.getElementById(tanggalId);
+    if (!bulanSelect || !tanggalInput) return;
 
     bulanSelect.onchange = function () {
         let bulan = this.value;
@@ -47,7 +49,6 @@ function updateTanggalMax(bulanId, tanggalId) {
 
 /* =========================
    MAP LEAFLET - REUSABLE
-   targetField: 'sherlock' atau 'maps'
 ========================= */
 let mapInstance, markerInstance, currentTargetField;
 
@@ -72,10 +73,8 @@ function bukaMap(targetField) {
             iconAnchor: [16, 40]
         });
 
-        /* CLICK EVENT - PILIH LOKASI */
         mapInstance.on('click', function (e) {
             if (markerInstance) mapInstance.removeLayer(markerInstance);
-
             markerInstance = L.marker(e.latlng, { icon: customIcon }).addTo(mapInstance);
             mapInstance.setView(e.latlng, 17);
 
@@ -95,7 +94,6 @@ function bukaMap(targetField) {
             `).openPopup();
         });
 
-        /* AUTO GPS SAAT MAP DIBUKA */
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 pos => mapInstance.setView([pos.coords.latitude, pos.coords.longitude], 16),
@@ -104,7 +102,6 @@ function bukaMap(targetField) {
         }
 
         mapInstance.invalidateSize();
-
     }, 200);
 }
 
@@ -127,7 +124,7 @@ function simpanLokasi(lat, lng) {
 
         simpanData();
         tutupMap();
-        alert('Lokasi berhasil disimpan!');
+        alert('✅ Lokasi berhasil disimpan!');
     })
     .catch(() => {
         let value = `Lat:${lat}, Lng:${lng} | https://maps.google.com/?q=${lat},${lng}`;
@@ -161,7 +158,6 @@ function cariAlamat() {
             return;
         }
 
-        /* TAMPILKAN DROPDOWN HASIL */
         let dropdown = document.getElementById('mapSearchResults');
         dropdown.innerHTML = '';
         dropdown.style.display = 'block';
@@ -175,7 +171,6 @@ function cariAlamat() {
             div.onclick = () => {
                 let lat = parseFloat(item.lat);
                 let lng = parseFloat(item.lon);
-
                 mapInstance.setView([lat, lng], 17);
 
                 let customIcon = L.divIcon({
@@ -236,7 +231,6 @@ function ambilGPSdiMap() {
 
             let lat = pos.coords.latitude;
             let lng = pos.coords.longitude;
-
             mapInstance.setView([lat, lng], 18);
 
             let customIcon = L.divIcon({
@@ -279,6 +273,7 @@ function ambilGPSdiMap() {
 function pilihForm(jenis) {
     document.getElementById("pasien").classList.remove("aktif");
     document.getElementById("jenazah").classList.remove("aktif");
+    document.getElementById("emergency").classList.remove("aktif");
     document.getElementById(jenis).classList.add("aktif");
 }
 
@@ -293,6 +288,9 @@ function tutupMap() {
     }
 }
 
+/* =========================
+   VALIDASI FORM
+========================= */
 function validasiForm(jenis) {
     if (!document.querySelector('input[name="layanan"]:checked')) {
         alert("Pilih jenis layanan terlebih dahulu");
@@ -300,64 +298,134 @@ function validasiForm(jenis) {
     }
 
     if (jenis === "pasien") {
-        if (!sherlock.value?.trim()) { alert("Sherlock Rumah wajib diisi"); return false; }
-        if (!nama1.value.trim()) { nama1.focus(); alert("Nama Pasien wajib"); return false; }
-        if (!kontak1.value.trim()) { kontak1.focus(); alert("Kontak wajib"); return false; }
-    } else {
-        if (!maps.value?.trim()) { alert("Lokasi Map wajib diisi"); return false; }
-        if (!nama2.value.trim()) { nama2.focus(); alert("Nama wajib"); return false; }
-        if (!kontak2.value.trim()) { kontak2.focus(); alert("Kontak wajib"); return false; }
+        let nama = document.getElementById('nama1');
+        let kontak = document.getElementById('kontak1');
+        let sherlock = document.getElementById('sherlock');
+        if (!sherlock.value?.trim()) { alert("❗ Lokasi rumah (Sherlock) wajib dipilih di peta"); return false; }
+        if (!nama.value.trim()) { nama.focus(); alert("❗ Nama Pasien wajib diisi"); return false; }
+        if (!kontak.value.trim()) { kontak.focus(); alert("❗ Kontak HP/WA wajib diisi"); return false; }
+
+    } else if (jenis === "jenazah") {
+        let nama = document.getElementById('nama2');
+        let kontak = document.getElementById('kontak2');
+        let maps = document.getElementById('maps');
+        if (!maps.value?.trim()) { alert("❗ Lokasi Map wajib dipilih di peta"); return false; }
+        if (!nama.value.trim()) { nama.focus(); alert("❗ Nama Almarhum/Almarhumah wajib diisi"); return false; }
+        if (!kontak.value.trim()) { kontak.focus(); alert("❗ Kontak HP/WA wajib diisi"); return false; }
+
+    } else if (jenis === "emergency") {
+        let nama = document.getElementById('nama3');
+        let kontak = document.getElementById('kontak3');
+        let lokasi = document.getElementById('sherlockEmg');
+        let keluhan = document.getElementById('penyakit3');
+        if (!nama.value.trim()) { nama.focus(); alert("❗ Nama Pasien wajib diisi"); return false; }
+        if (!keluhan.value.trim()) { keluhan.focus(); alert("❗ Keluhan/Gejala wajib diisi"); return false; }
+        if (!lokasi.value?.trim()) { alert("❗ Lokasi darurat wajib dipilih di peta"); return false; }
+        if (!kontak.value.trim()) { kontak.focus(); alert("❗ Kontak HP/WA wajib diisi"); return false; }
     }
+
     return true;
 }
 
+/* =========================
+   KIRIM KE WHATSAPP
+========================= */
 function kirim(jenis) {
     if (!validasiForm(jenis)) return;
 
-    let isPasien = jenis === 'pasien';
-    let hariEl = document.getElementById(isPasien ? 'hari1' : 'hari2');
-    let tglEl = document.getElementById(isPasien ? 'tanggal1' : 'tanggal2');
-    let bulanEl = document.getElementById(isPasien ? 'bulan1' : 'bulan2');
-    let tahunEl = document.getElementById(isPasien ? 'tahun1' : 'tahun2');
+    let pesan = '';
 
-    let tanggalLengkap = [hariEl.value, tglEl.value, bulanEl.value, tahunEl.value].filter(Boolean).join(' ');
+    if (jenis === 'pasien') {
+        let hari    = document.getElementById('hari1').value;
+        let tgl     = document.getElementById('tanggal1').value;
+        let bulan   = document.getElementById('bulan1').value;
+        let tahun   = document.getElementById('tahun1').value;
+        let tglLengkap = [hari, tgl, bulan, tahun].filter(Boolean).join(' ');
 
-    let pesan = isPasien ?
-        `*PERMOHONAN AMBULANS - PASIEN*
+        pesan = `*🏥 PERMOHONAN AMBULANS - PASIEN*
 
-Tanggal: ${tanggalLengkap}
-Nama: ${nama1.value}
-Usia: ${usia1.value || '-'} tahun
-Kondisi: ${kondisi.value || '-'}
-Penyakit: ${penyakit.value || '-'}
-TBC: ${tbc.value || '-'}
+📅 Tanggal   : ${tglLengkap || '-'}
+👤 Nama      : ${document.getElementById('nama1').value}
+🎂 Usia      : ${document.getElementById('usia1').value || '-'} tahun
+🛏️ Kondisi  : ${document.getElementById('kondisi1').value || '-'}
+🩺 Penyakit : ${document.getElementById('penyakit1').value || '-'}
+🦠 TBC       : ${document.getElementById('tbc1').value || '-'}
 
-Sherlock Rumah:
-${sherlock.value}
+📍 Lokasi Penjemputan:
+${document.getElementById('sherlock').value}
 
-Alamat Tujuan: ${alamatAntar1.value || '-'}
-Jam: ${jam1.value || '-'}
-Pendamping: ${pendamping.value || 0}
-Kontak: ${kontak1.value}` :
-        `*PERMOHONAN AMBULANS - JENAZAH*
+🏁 Alamat Tujuan : ${document.getElementById('alamatAntar1').value || '-'}
+⏰ Jam           : ${document.getElementById('jam1').value || '-'}
+👥 Pendamping    : ${document.getElementById('pendamping1').value || 0} orang
+📱 Kontak        : ${document.getElementById('kontak1').value}
 
-Tanggal: ${tanggalLengkap}
-Nama: ${nama2.value}
-Usia: ${usia2.value || '-'} tahun
+📝 Keterangan Tambahan:
+${document.getElementById('keterangan1').value || '-'}`;
 
-Lokasi Map:
-${maps.value}
+    } else if (jenis === 'jenazah') {
+        let hari    = document.getElementById('hari2').value;
+        let tgl     = document.getElementById('tanggal2').value;
+        let bulan   = document.getElementById('bulan2').value;
+        let tahun   = document.getElementById('tahun2').value;
+        let tglLengkap = [hari, tgl, bulan, tahun].filter(Boolean).join(' ');
 
-Alamat Tujuan: ${alamatAntar2.value || '-'}
-Jam: ${jam2.value || '-'}
-Kontak: ${kontak2.value}
-Sakit: ${sakit.value || '-'}
-Peti: ${peti.value || '-'}`;
+        pesan = `*🕌 PERMOHONAN AMBULANS - JENAZAH*
 
-    window.open(`https://wa.me/${nomorWA}?text=${encodeURIComponent(pesan)}`);
+📅 Tanggal   : ${tglLengkap || '-'}
+👤 Nama      : ${document.getElementById('nama2').value}
+🎂 Usia      : ${document.getElementById('usia2').value || '-'} tahun
+
+📍 Lokasi Jenazah:
+${document.getElementById('maps').value}
+
+🏁 Alamat Tujuan : ${document.getElementById('alamatAntar2').value || '-'}
+⏰ Jam           : ${document.getElementById('jam2').value || '-'}
+📱 Kontak        : ${document.getElementById('kontak2').value}
+🏥 Sakit         : ${document.getElementById('sakit2').value || '-'}
+⚰️ Peti Mati     : ${document.getElementById('peti2').value || '-'}
+
+📝 Keterangan Tambahan:
+${document.getElementById('keterangan2').value || '-'}`;
+
+    } else if (jenis === 'emergency') {
+        let hari    = document.getElementById('hari3').value;
+        let tgl     = document.getElementById('tanggal3').value;
+        let bulan   = document.getElementById('bulan3').value;
+        let tahun   = document.getElementById('tahun3').value;
+        let tglLengkap = [hari, tgl, bulan, tahun].filter(Boolean).join(' ');
+
+        pesan = `*🚨 EMERGENCY - PERMOHONAN AMBULANS DARURAT 🚨*
+
+📅 Tanggal    : ${tglLengkap || '-'}
+👤 Nama       : ${document.getElementById('nama3').value}
+🎂 Usia       : ${document.getElementById('usia3').value || '-'} tahun
+⚠️ Kondisi   : ${document.getElementById('kondisi3').value || '-'}
+🩺 Keluhan    : ${document.getElementById('penyakit3').value}
+🦠 TBC        : ${document.getElementById('tbc3').value || '-'}
+
+📍 LOKASI DARURAT:
+${document.getElementById('sherlockEmg').value}
+
+📌 Alamat Detail  : ${document.getElementById('alamatEmg').value || '-'}
+🏁 Tujuan/RS      : ${document.getElementById('tujuanEmg').value || '-'}
+⏰ Jam Kejadian   : ${document.getElementById('jam3').value || '-'}
+👥 Pendamping     : ${document.getElementById('pendamping3').value || 0} orang
+📱 Kontak Darurat : ${document.getElementById('kontak3').value}
+
+📝 Keterangan Tambahan:
+${document.getElementById('keterangan3').value || '-'}
+
+_Mohon segera direspon. Terima kasih._`;
+    }
+
+    if (pesan) {
+        window.open(`https://wa.me/${nomorWA}?text=${encodeURIComponent(pesan)}`);
+    }
 }
 
-/* SAVE/LOAD */
+/* =========================
+   SAVE / LOAD DATA LOKAL
+========================= */
 function simpanData() {
     let data = {};
     document.querySelectorAll("input, textarea, select").forEach(el => {
@@ -383,5 +451,6 @@ window.onload = function () {
     initBulan();
     updateTanggalMax('bulan1', 'tanggal1');
     updateTanggalMax('bulan2', 'tanggal2');
+    updateTanggalMax('bulan3', 'tanggal3');
     loadData();
 };

@@ -16,10 +16,13 @@
 
     <div class="pilihan">
         <input type="radio" id="pasienRadio" name="layanan" onclick="pilihForm('pasien')">
-        <label for="pasienRadio">Pasien</label>
+        <label for="pasienRadio">🏥 Pasien</label>
 
         <input type="radio" id="jenazahRadio" name="layanan" onclick="pilihForm('jenazah')">
-        <label for="jenazahRadio">Jenazah</label>
+        <label for="jenazahRadio">🕌 Jenazah</label>
+
+        <input type="radio" id="emergencyRadio" name="layanan" onclick="pilihForm('emergency')">
+        <label for="emergencyRadio">🚨 Emergency</label>
     </div>
 
     <!-- FORM PASIEN -->
@@ -35,13 +38,10 @@
                 <option value="Sabtu">Sabtu</option>
                 <option value="Minggu">Minggu</option>
             </select>
-
             <input id="tanggal1" type="number" min="1" max="31" placeholder="Tgl" class="tanggal-input">
-
             <select id="bulan1" class="bulan-select">
                 <option value="">Bulan</option>
             </select>
-
             <input id="tahun1" type="number" min="2024" placeholder="Thn" class="tahun-input">
             <small class="tanggal-hint">Tahun 2024 ke atas</small>
         </div>
@@ -49,15 +49,15 @@
         <input id="nama1" placeholder="Nama Pasien">
         <input id="usia1" type="number" min="0" max="120" placeholder="Usia (tahun)">
 
-        <select id="kondisi">
+        <select id="kondisi1">
             <option value="">Kondisi Pasien</option>
             <option value="Duduk">Duduk</option>
             <option value="Berbaring">Berbaring</option>
         </select>
 
-        <input id="penyakit" placeholder="Penyakit/Keluhan">
+        <input id="penyakit1" placeholder="Penyakit/Keluhan">
 
-        <select id="tbc">
+        <select id="tbc1">
             <option value="">Apakah TBC?</option>
             <option value="Ya">Ya</option>
             <option value="Tidak">Tidak</option>
@@ -75,10 +75,11 @@
             <small class="jam-hint">Jam permintaan layanan</small>
         </div>
 
-        <input id="pendamping" type="number" min="0" max="10" placeholder="Jumlah Pendamping (0-10)">
+        <input id="pendamping1" type="number" min="0" max="10" placeholder="Jumlah Pendamping (0-10)">
         <input id="kontak1" placeholder="Kontak HP/WA (WAJIB*)">
+        <textarea id="keterangan1" placeholder="Keterangan Tambahan (opsional)"></textarea>
 
-        <button onclick="kirim('pasien')">🚀 Kirim Permintaan</button>
+        <button onclick="kirim('pasien')">🚀 Kirim Permintaan via WhatsApp</button>
     </div>
 
     <!-- FORM JENAZAH -->
@@ -94,13 +95,10 @@
                 <option value="Sabtu">Sabtu</option>
                 <option value="Minggu">Minggu</option>
             </select>
-
             <input id="tanggal2" type="number" min="1" max="31" placeholder="Tgl" class="tanggal-input">
-
             <select id="bulan2" class="bulan-select">
                 <option value="">Bulan</option>
             </select>
-
             <input id="tahun2" type="number" min="2024" placeholder="Thn" class="tahun-input">
             <small class="tanggal-hint">Tahun 2024 ke atas</small>
         </div>
@@ -121,39 +119,95 @@
         </div>
 
         <input id="kontak2" placeholder="Kontak HP/WA (WAJIB*)">
-        <input id="sakit" placeholder="Sakit sebelum meninggal">
-        <input id="peti" placeholder="Peti mati (Ya/Tidak)">
+        <input id="sakit2" placeholder="Sakit sebelum meninggal">
+        <input id="peti2" placeholder="Peti mati (Ya/Tidak)">
+        <textarea id="keterangan2" placeholder="Keterangan Tambahan (opsional)"></textarea>
 
-        <button onclick="kirim('jenazah')">🚀 Kirim Permintaan</button>
+        <button onclick="kirim('jenazah')">🚀 Kirim Permintaan via WhatsApp</button>
+    </div>
+
+    <!-- FORM EMERGENCY -->
+    <div id="emergency" class="form">
+        <div class="emergency-banner">
+            🚨 LAYANAN DARURAT — Segera Direspon
+        </div>
+
+        <div class="tanggal-group">
+            <select id="hari3" class="hari-select">
+                <option value="">Hari</option>
+                <option value="Senin">Senin</option>
+                <option value="Selasa">Selasa</option>
+                <option value="Rabu">Rabu</option>
+                <option value="Kamis">Kamis</option>
+                <option value="Jumat">Jumat</option>
+                <option value="Sabtu">Sabtu</option>
+                <option value="Minggu">Minggu</option>
+            </select>
+            <input id="tanggal3" type="number" min="1" max="31" placeholder="Tgl" class="tanggal-input">
+            <select id="bulan3" class="bulan-select">
+                <option value="">Bulan</option>
+            </select>
+            <input id="tahun3" type="number" min="2024" placeholder="Thn" class="tahun-input">
+            <small class="tanggal-hint">Tanggal kejadian darurat</small>
+        </div>
+
+        <input id="nama3" placeholder="Nama Pasien (WAJIB*)">
+        <input id="usia3" type="number" min="0" max="120" placeholder="Usia (tahun)">
+
+        <select id="kondisi3">
+            <option value="">Kondisi Pasien</option>
+            <option value="Sadar">SADAR</option>
+            <option value="Tidak Sadar">TIDAK SADAR</option>
+            <option value="Sesak Nafas">SESAK NAFAS</option>
+            <option value="Henti Jantung">HENTI JANTUNG</option>
+            <option value="Kecelakaan">KECELAKAAN</option>
+            <option value="Perdarahan">PERDARAHAN</option>
+            <option value="Kejang">KEJANG</option>
+        </select>
+
+        <input id="penyakit3" placeholder="Keluhan/Gejala Utama (WAJIB*)">
+
+        <select id="tbc3">
+            <option value="">Apakah TBC?</option>
+            <option value="Ya">Ya</option>
+            <option value="Tidak">Tidak</option>
+        </select>
+
+        <div class="lokasi-group">
+            <input id="sherlockEmg" placeholder="Lokasi Darurat - Klik tombol di bawah" readonly>
+            <button type="button" class="btn-lokasi btn-lokasi-emg" onclick="bukaMap('sherlockEmg')">📡 Tandai Lokasi Darurat</button>
+        </div>
+
+        <textarea id="alamatEmg" placeholder="Alamat Lengkap Lokasi Darurat (patokan terdekat)"></textarea>
+
+        <textarea id="tujuanEmg" placeholder="Tujuan Antar / Nama RS Tujuan"></textarea>
+
+        <div class="jam-group">
+            <input id="jam3" type="time">
+            <small class="jam-hint">Jam kejadian / jam dibutuhkan</small>
+        </div>
+
+        <input id="pendamping3" type="number" min="0" max="10" placeholder="Jumlah Pendamping (0-10)">
+        <input id="kontak3" placeholder="Kontak HP/WA (WAJIB* - bisa dihubungi sekarang)">
+
+        <textarea id="keterangan3" rows="4" placeholder="Keterangan Tambahan — kondisi lebih detail, tindakan pertolongan pertama yang sudah dilakukan, dll."></textarea>
+
+        <button class="btn-emergency" onclick="kirim('emergency')">🚨 KIRIM DARURAT via WhatsApp</button>
     </div>
 </div>
 
 <!-- MAP MODAL -->
 <div id="mapModal" class="modal" onclick="if(event.target===this)tutupMap()">
     <div class="modal-content">
-
-        <!-- SEARCH BAR -->
         <div class="map-search-bar">
-            <input
-                id="mapSearchInput"
-                type="text"
-                placeholder="🔍 Cari alamat atau nama tempat..."
-                onkeydown="if(event.key==='Enter')cariAlamat()"
-            >
+            <input id="mapSearchInput" type="text" placeholder="🔍 Cari alamat atau nama tempat..." onkeydown="if(event.key==='Enter')cariAlamat()">
             <button id="mapSearchBtn" onclick="cariAlamat()">Cari</button>
             <button id="mapGPSBtn" onclick="ambilGPSdiMap()">📡 Lokasi Saya</button>
             <button class="map-close-btn" onclick="tutupMap()">✕ Tutup</button>
         </div>
-
-        <!-- DROPDOWN HASIL PENCARIAN -->
         <div id="mapSearchResults" style="display:none; position:absolute; top:110px; left:30px; right:30px; background:white; border:1px solid #ddd; border-radius:10px; z-index:9999; max-height:200px; overflow-y:auto; box-shadow:0 4px 15px rgba(0,0,0,0.15);"></div>
-
-        <!-- PETUNJUK -->
         <p class="map-hint">👆 Cari alamat atau klik lokasi di peta untuk memilih titik penjemputan</p>
-
-        <!-- MAP CONTAINER -->
         <div id="map"></div>
-
     </div>
 </div>
 
