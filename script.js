@@ -369,7 +369,7 @@ ${document.getElementById('keterangan1').value || '-'}`;
         let tahun   = document.getElementById('tahun2').value;
         let tglLengkap = [hari, tgl, bulan, tahun].filter(Boolean).join(' ');
 
-        pesan = `*🕌 PERMOHONAN AMBULANS - JENAZAH*
+        pesan = `*🏳️ PERMOHONAN AMBULANS - JENAZAH*
 
 📅 Tanggal   : ${tglLengkap || '-'}
 👤 Nama      : ${document.getElementById('nama2').value}

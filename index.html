@@ -19,7 +19,7 @@
         <label for="pasienRadio">🏥 Pasien</label>
 
         <input type="radio" id="jenazahRadio" name="layanan" onclick="pilihForm('jenazah')">
-        <label for="jenazahRadio">🕌 Jenazah</label>
+        <label for="jenazahRadio">🏳️ Jenazah</label>
 
         <input type="radio" id="emergencyRadio" name="layanan" onclick="pilihForm('emergency')">
         <label for="emergencyRadio">🚨 Emergency</label>
@@ -42,12 +42,12 @@
             <select id="bulan1" class="bulan-select">
                 <option value="">Bulan</option>
             </select>
-            <input id="tahun1" type="number" min="2024" placeholder="Thn" class="tahun-input">
-            <small class="tanggal-hint">Tahun 2024 ke atas</small>
+            <input id="tahun1" type="number" placeholder="Thn" class="tahun-input">
+            <small class="tanggal-hint"></small>
         </div>
 
         <input id="nama1" placeholder="Nama Pasien">
-        <input id="usia1" type="number" min="0" max="120" placeholder="Usia (tahun)">
+        <input id="usia1" type="number" min="0" placeholder="Usia (tahun)">
 
         <select id="kondisi1">
             <option value="">Kondisi Pasien</option>
@@ -71,11 +71,12 @@
         <textarea id="alamatAntar1" placeholder="Alamat Tujuan Antar"></textarea>
 
         <div class="jam-group">
-            <input id="jam1" type="time">
             <small class="jam-hint">Jam permintaan layanan</small>
+            <input id="jam1" type="time">
+            
         </div>
 
-        <input id="pendamping1" type="number" min="0" max="10" placeholder="Jumlah Pendamping (0-10)">
+        <input id="pendamping1" type="number" min="0" max="5" placeholder="Jumlah Pendamping (0-5)">
         <input id="kontak1" placeholder="Kontak HP/WA (WAJIB*)">
         <textarea id="keterangan1" placeholder="Keterangan Tambahan (opsional)"></textarea>
 
@@ -99,12 +100,12 @@
             <select id="bulan2" class="bulan-select">
                 <option value="">Bulan</option>
             </select>
-            <input id="tahun2" type="number" min="2024" placeholder="Thn" class="tahun-input">
-            <small class="tanggal-hint">Tahun 2024 ke atas</small>
+            <input id="tahun2" type="number"  placeholder="Thn" class="tahun-input">
+            <small class="tanggal-hint"></small>
         </div>
 
         <input id="nama2" placeholder="Nama Almarhum/Almarhumah">
-        <input id="usia2" type="number" min="0" max="120" placeholder="Usia (tahun)">
+        <input id="usia2" type="number" min="0" placeholder="Usia (tahun)">
 
         <div class="lokasi-group">
             <input id="maps" placeholder="Lokasi Map - Klik tombol di bawah" readonly>
@@ -114,8 +115,9 @@
         <textarea id="alamatAntar2" placeholder="Alamat Tujuan Antar"></textarea>
 
         <div class="jam-group">
+             <small class="jam-hint">Jam permintaan layanan</small>
             <input id="jam2" type="time">
-            <small class="jam-hint">Jam permintaan layanan</small>
+           
         </div>
 
         <input id="kontak2" placeholder="Kontak HP/WA (WAJIB*)">
@@ -133,6 +135,7 @@
         </div>
 
         <div class="tanggal-group">
+            <small class="tanggal-hint">Tanggal kejadian darurat</small>
             <select id="hari3" class="hari-select">
                 <option value="">Hari</option>
                 <option value="Senin">Senin</option>
@@ -147,12 +150,12 @@
             <select id="bulan3" class="bulan-select">
                 <option value="">Bulan</option>
             </select>
-            <input id="tahun3" type="number" min="2024" placeholder="Thn" class="tahun-input">
-            <small class="tanggal-hint">Tanggal kejadian darurat</small>
+            <input id="tahun3" type="number" placeholder="Thn" class="tahun-input">
+            <small class="tanggal-hint"></small>
         </div>
 
         <input id="nama3" placeholder="Nama Pasien (WAJIB*)">
-        <input id="usia3" type="number" min="0" max="120" placeholder="Usia (tahun)">
+        <input id="usia3" type="number" min="0" placeholder="Usia (tahun)">
 
         <select id="kondisi3">
             <option value="">Kondisi Pasien</option>
@@ -183,11 +186,11 @@
         <textarea id="tujuanEmg" placeholder="Tujuan Antar / Nama RS Tujuan"></textarea>
 
         <div class="jam-group">
+            <small class="jam-hint">Jam kejadian darurat</small>
             <input id="jam3" type="time">
-            <small class="jam-hint">Jam kejadian / jam dibutuhkan</small>
         </div>
 
-        <input id="pendamping3" type="number" min="0" max="10" placeholder="Jumlah Pendamping (0-10)">
+        <input id="pendamping3" type="number" min="0" max="5" placeholder="Jumlah Pendamping (0-5)">
         <input id="kontak3" placeholder="Kontak HP/WA (WAJIB* - bisa dihubungi sekarang)">
 
         <textarea id="keterangan3" rows="4" placeholder="Keterangan Tambahan — kondisi lebih detail, tindakan pertolongan pertama yang sudah dilakukan, dll."></textarea>
